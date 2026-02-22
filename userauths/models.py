@@ -5,7 +5,7 @@ from django.db import models
 
 USER_TYPE=(
     ("Voyageur","Voyageur"),
-    ("administrateur","administrateur")
+
 )
 class User(AbstractUser):
     email = models.EmailField(unique=True)
