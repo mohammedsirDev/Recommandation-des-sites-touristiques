@@ -1,0 +1,275 @@
+{% extends "partials/site.html" %} 
+{% block content %}
+<!-- HERO BANNER -->
+<div class="detail-hero" style="background: url('{{site.image.url}}') no-repeat center center; background-size: cover;)">
+  <div class="detail-hero-overlay"></div>
+  <div class="detail-hero-content container">
+    <nav aria-label="breadcrumb" class="mb-3">
+      <ol class="breadcrumb breadcrumb-light">
+        <li class="breadcrumb-item"><a href="index.html">Accueil</a></li>
+        <li class="breadcrumb-item"><a href="sites.html">Sites </a></li>
+        <li class="breadcrumb-item active"> {{ site.name }}</li>
+      </ol>
+    </nav>
+    <span class="detail-badge"> {{ site.type|capfirst  }}</span>
+    <h1 class="detail-title">{{ site.name }}</h1>
+    <div class="detail-meta">
+      <span><i class="fas fa-map-pin"></i> {{site.Adresse}}, Maroc</span>
+      <span class="detail-rating">
+        
+                   {% if site.average_rating|floatformat:0 == "1" %}⭐{% endif %}
+                    {% if site.average_rating|floatformat:0 == "2" %}⭐⭐{% endif %}
+                    {% if site.average_rating|floatformat:0 == "3" %}⭐⭐⭐{% endif %}
+                    {% if site.average_rating|floatformat:0 == "4" %}⭐⭐⭐⭐{% endif %}
+                    {% if site.average_rating|floatformat:0 == "5" %}⭐⭐⭐⭐⭐{% endif %}
+      
+        {{site.average_rating}} / 5 <em>(312 avis)</em>
+      </span>
+      <span><i class="fas fa-bookmark"></i> Niveau d'intérêt : ★★★★★</span>
+    </div>
+    <div class="detail-actions">
+           <form method="POST" action="{% url 'sites:toggle_favorite' site.id %}">
+    {% csrf_token %}
+
+    {% if site in user.voyageur.favorite_sites.all %}
+        <button class="btn btn-fav-detail">
+            <i class="fas fa-heart text-danger"></i> Retirer des favoris
+        </button>
+    {% else %}
+        <button class="btn btn-outline-info" type="submit">
+            <i class="far fa-heart"></i> Ajouter aux favoris
+        </button>
+    {% endif %}
+</form>
+            {% if user.is_authenticated %}
+<button class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#reviewModal">
+    <i class="far fa-heart"></i> Évaluer ce site
+</button>
+
+{% else %}
+<a href="{% url 'userauths:login_form' %}" class="btn btn-outline-danger">
+    <i class="far fa-heart"></i> Évaluer ce site
+</a>
+{% endif %}
+    </div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="container detail-layout">
+  <div class="row g-4">
+
+    <!-- LEFT: Main content -->
+    <div class="col-lg-8">
+
+      <!-- About -->
+      <div class="detail-card">
+        <h2 class="detail-section-title"><span>À propos</span></h2>
+        <p class="detail-desc">
+       
+                {{site.description}}
+        </p>
+     
+      </div>
+
+      <!-- Activities -->
+      <div class="detail-card">
+        <h2 class="detail-section-title"><span>Activités disponibles</span></h2>
+        <div class="activities-grid p-4" >
+            {% for activity in site.activities.all %}
+          <div class="activity-chip"><i class="{{activity.icon}}"></i> {{activity.name|capfirst }}</div>
+         
+         {% empty %}
+    <p>No activities available.</p>
+  {% endfor %}
+      </div>
+
+   <!-- map -->
+     <div class="detail-card">
+  <h2 class="detail-section-title"><span>Carte interactive</span></h2>
+  <iframe id="mapFrame"
+    width="100%"
+    height="400"
+    style="border:0; border-radius:12px;"
+    loading="lazy"
+    allowfullscreen>
+  </iframe>
+</div>
+
+
+      <!-- Reviews -->
+      <div class="detail-card" id="reviews">
+        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+          <h2 class="detail-section-title mb-0"><span>Avis des visiteurs</span></h2>
+                    {% if user.is_authenticated %}
+<button class="btn btn-review-detail" data-bs-toggle="modal" data-bs-target="#reviewModal">
+    <i class="far fa-heart"></i> Évaluer ce site
+</button>
+
+{% else %}
+<a href="{% url 'userauths:login_form' %}" class="btn btn-outline-danger">
+    <i class="far fa-heart"></i> Évaluer ce site
+</a>
+{% endif %}
+         
+          </button>
+        </div>
+
+
+     
+
+        <!-- Individual reviews -->
+        <div class="reviews-list mt-4">
+         {% for review in site.site_reviews.all %}
+          <div class="review-item">
+            <div class="review-avatar">{{review.title|slice:":2"}}</div>
+            <div class="review-body">
+              <div class="review-header">
+                <strong>{{review.user_name|default:"Anonymous"}}</strong>
+                <div class="review-stars">
+                  <div class="review-stars">
+                    {% if review.rating == 1 %}⭐{% endif %}
+                    {% if review.rating == 2 %}⭐⭐{% endif %}
+                    {% if review.rating == 3 %}⭐⭐⭐{% endif %}
+                    {% if review.rating == 4 %}⭐⭐⭐⭐{% endif %}
+                    {% if review.rating == 5 %}⭐⭐⭐⭐⭐{% endif %}
+                  </div>
+  
+
+                </div>
+                <span class="review-date">{{review.visit_date}}</span>
+              </div>
+              <h6 class="review-title">{{review.title}}</h6>
+              <p class="review-text">{{review.comment}}</p>
+            </div>
+          </div>
+        
+{% empty %}
+    <p>No reviews yet.</p>
+{% endfor %}
+   
+        </div>
+      </div>
+    </div>
+  </div>
+    <!-- RIGHT: Sidebar -->
+    <div class="col-lg-4">
+      <!-- Practical Info -->
+      <div class="detail-sidebar-card">
+        <h4 class="sidebar-card-title">Informations pratiques</h4>
+        <div class="info-list">
+          <div class="info-row">
+            <div class="info-icon" style="background:#fef3c7;color:#92400e"><i class="fas fa-ticket-alt"></i></div>
+            <div><div class="info-label">Tarif d'entrée</div><div class="info-value">{{site.Tarif_d_entrée}}</div></div>
+          </div>
+          <div class="info-row">
+            <div class="info-icon" style="background:#dcfce7;color:#166534"><i class="fas fa-clock"></i></div>
+            <div><div class="info-label">Horaires</div><div class="info-value">Ouvert {{site.Horaires}}</div></div>
+          </div>
+          <div class="info-row">
+            <div class="info-icon" style="background:#dbeafe;color:#1e40af"><i class="fas fa-phone"></i></div>
+            <div><div class="info-label">Contact</div><div class="info-value">{{site.contact}}</div></div>
+          </div>
+          <div class="info-row">
+            <div class="info-icon" style="background:#f3e8ff;color:#6b21a8"><i class="fas fa-globe"></i></div>
+            <div><div class="info-label">Site web</div><div class="info-value"><a href="#">{{site.site_web}}</a></div></div>
+          </div>
+          <div class="info-row">
+            <div class="info-icon" style="background:#ffe4e6;color:#9f1239"><i class="fas fa-map-marker-alt"></i></div>
+            <div><div class="info-label">Adresse</div><div class="info-value">{{site.Adresse}}</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Weather tip -->
+      <div class="detail-sidebar-card tip-card">
+        <div class="tip-icon"><i class="fas fa-sun"></i></div>
+        <h5>Meilleure période</h5>
+        <p>Printemps (mars-mai) et automne (sept-nov) pour des températures idéales. Évitez juillet-août (très chaud).</p>
+      </div>
+
+      <!-- Similar sites -->
+    
+      <div class="detail-sidebar-card">
+        <h4 class="sidebar-card-title">Sites similaires </h4>
+        <div class="similar-list">
+             {% for s in site.similar_sites.all  %}
+          <a href="{% url 'sites:sites_detail' s.id %}" class="similar-item">
+            <div class="similar-img" style=""> <img style="width:100px; height:60px" src="{{s.image.url}}"alt="icon"  /> </div>
+            <div class="similar-info">
+              <div class="similar-name">{{s.name}}</div>
+              <div class="similar-loc"><i class="fas fa-map-pin"></i> {{s.Adresse}}</div>
+              <div class="similar-rating"> {% if site.average_rating|floatformat:0 == "1" %}⭐{% endif %}
+                    {% if site.average_rating|floatformat:0 == "2" %}⭐⭐{% endif %}
+                    {% if site.average_rating|floatformat:0 == "3" %}⭐⭐⭐{% endif %}
+                    {% if site.average_rating|floatformat:0 == "4" %}⭐⭐⭐⭐{% endif %}
+                    {% if site.average_rating|floatformat:0 == "5" %}⭐⭐⭐⭐⭐{% endif %} {{s.average_rating}}</div>
+            </div>
+          </a>
+         {% endfor %}
+    
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- REVIEW MODAL -->
+<div class="modal fade" id="reviewModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content review-modal">
+      <form method="POST" action="{% url 'sites:add_review' site.id %}">
+        {% csrf_token %}
+        <div class="modal-header">
+          <h5 class="modal-title"><i class="fas fa-star text-warning me-2"></i>Évaluer ce site</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-4">
+            <label class="form-label fw-semibold">Votre note</label>
+            <div class="modal-stars" id="modalStars">
+              {{ form.rating }}
+       
+            </div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Titre</label>
+            {{ form.title }}
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Prenom et Nom</label>
+            {{ form.user_name }}
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Commentaire</label>
+            {{ form.comment }}
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Date de visite</label>
+            {{ form.visit_date }}
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-ghost" data-bs-dismiss="modal">Annuler</button>
+          <button type="submit" class="btn btn-primary-custom px-4">
+            <i class="fas fa-paper-plane me-2"></i>Publier
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<script>
+    var placeName = "{{site.Adresse}}";
+  document.getElementById("mapFrame").src =
+    "https://www.google.com/maps?q=" + encodeURIComponent(placeName) + "&output=embed";
+  // ── Navbar scroll effect
+  const nav = document.getElementById('mainNav');
+  if (nav) {
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 30);
+    });
+  }
+</script>
+
+{% endblock %}

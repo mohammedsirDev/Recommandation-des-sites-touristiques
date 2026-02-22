@@ -1,0 +1,271 @@
+{% extends "partials/site.html" %} 
+{% block content %}
+<section class="hero-section">
+  <div class="hero-bg">
+    <div class="hero-overlay"></div>
+    <div class="hero-pattern"></div>
+  </div>
+  <div class="container hero-content">
+    <div class="row justify-content-center text-center">
+      <div class="col-lg-9">
+        <div class="hero-badge">
+          <i class="fas fa-star"></i> Plus de 200 sites vérifiés
+        </div>
+        <h1 class="hero-title">
+          Explorez les<br/>
+          <em>merveilles</em> du Maroc
+        </h1>
+        <p class="hero-sub">
+          Des recommandations personnalisées selon vos goûts, pour des voyages inoubliables au cœur du royaume.
+        </p>
+        <!-- Search bar -->
+    <div class="hero-search">
+  <form method="GET" action="{% url 'sites:afficher_site' %}">
+    <div class="search-wrap">
+      
+      <div class="search-field">
+        <i class="fas fa-search search-icon"></i>
+        <input type="text"
+               name="q"
+               class="form-control"
+               placeholder="Rechercher un site" />
+      </div>
+
+      <button type="submit" class="btn btn-search">
+        Rechercher
+      </button>
+
+    </div>
+  </form>
+</div>
+        <!-- Tags -->
+ 
+      </div>
+    </div>
+  </div>
+  <div class="hero-scroll-hint">
+    <i class="fas fa-chevron-down"></i>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════ STATS -->
+<section class="stats-bar">
+  <div class="container">
+    <div class="row g-0">
+      <div class="col-6 col-md-3 stat-item">
+        <div class="stat-number">200<span>+</span></div>
+        <div class="stat-label">Sites référencés</div>
+      </div>
+      <div class="col-6 col-md-3 stat-item">
+        <div class="stat-number">8</div>
+        <div class="stat-label">Catégories</div>
+      </div>
+      <div class="col-6 col-md-3 stat-item">
+        <div class="stat-number">4.8</div>
+        <div class="stat-label">Note moyenne</div>
+      </div>
+      <div class="col-6 col-md-3 stat-item">
+        <div class="stat-number">12K<span>+</span></div>
+        <div class="stat-label">Voyageurs</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════ CATEGORIES -->
+
+<section class="section-gap">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-tag">Explorer</div>
+      <h2 class="section-title">Par catégorie</h2>
+      <p class="section-sub">Choisissez votre type de destination idéale</p>
+    </div>
+    <div class="row g-3 mt-2">
+
+      <div class="col-6 col-md-3">
+        <a href="{% if sites_count.Plage %}{% url 'sites:site_par_type' 'Plage' %}{% else %}#{% endif %}"
+           class="category-card{% if not sites_count.Plage %} category-card--disabled{% endif %}">
+          <div class="cat-icon" style="background:linear-gradient(135deg,#06b6d4,#0891b2)">
+            <i class="fas fa-umbrella-beach"></i>
+          </div>
+          <div class="cat-name">Plage</div>
+          <div class="cat-count">{{ sites_count.Plage|default:0 }} sites</div>
+          <div class="cat-arrow"><i class="fas fa-arrow-right"></i></div>
+        </a>
+      </div>
+
+      <div class="col-6 col-md-3">
+        <a href="{% if sites_count.Montagne %}{% url 'sites:site_par_type' 'Montagne' %}{% else %}#{% endif %}"
+           class="category-card{% if not sites_count.Montagne %} category-card--disabled{% endif %}">
+          <div class="cat-icon" style="background:linear-gradient(135deg,#6b7280,#374151)">
+            <i class="fas fa-mountain"></i>
+          </div>
+          <div class="cat-name">Montagne</div>
+          <div class="cat-count">{{ sites_count.Montagne|default:0 }} sites</div>
+          <div class="cat-arrow"><i class="fas fa-arrow-right"></i></div>
+        </a>
+      </div>
+
+      <div class="col-6 col-md-3">
+        <a href="{% if sites_count.history %}{% url 'sites:site_par_type' 'history' %}{% else %}#{% endif %}"
+           class="category-card{% if not sites_count.history %} category-card--disabled{% endif %}">
+          <div class="cat-icon" style="background:linear-gradient(135deg,#d97706,#b45309)">
+            <i class="fas fa-landmark"></i>
+          </div>
+          <div class="cat-name">Histoire & Culture</div>
+          <div class="cat-count">{{ sites_count.history|default:0 }} sites</div>
+          <div class="cat-arrow"><i class="fas fa-arrow-right"></i></div>
+        </a>
+      </div>
+
+      <div class="col-6 col-md-3">
+        <a href="{% if sites_count.nature %}{% url 'sites:site_par_type' 'nature' %}{% else %}#{% endif %}"
+           class="category-card{% if not sites_count.nature %} category-card--disabled{% endif %}">
+          <div class="cat-icon" style="background:linear-gradient(135deg,#16a34a,#15803d)">
+            <i class="fas fa-tree"></i>
+          </div>
+          <div class="cat-name">Nature</div>
+          <div class="cat-count">{{ sites_count.nature|default:0 }} sites</div>
+          <div class="cat-arrow"><i class="fas fa-arrow-right"></i></div>
+        </a>
+      </div>
+
+      <div class="col-6 col-md-3">
+        <a href="{% if sites_count.ville %}{% url 'sites:site_par_type' 'ville' %}{% else %}#{% endif %}"
+           class="category-card{% if not sites_count.ville %} category-card--disabled{% endif %}">
+          <div class="cat-icon" style="background:linear-gradient(135deg,#4f46e5,#4338ca)">
+            <i class="fas fa-city"></i>
+          </div>
+          <div class="cat-name">Ville & Architecture</div>
+          <div class="cat-count">{{ sites_count.ville|default:0 }} sites</div>
+          <div class="cat-arrow"><i class="fas fa-arrow-right"></i></div>
+        </a>
+      </div>
+
+      <div class="col-6 col-md-3">
+        <a href="{% if sites_count.Gastronomie %}{% url 'sites:site_par_type' 'Gastronomie' %}{% else %}#{% endif %}"
+           class="category-card{% if not sites_count.Gastronomie %} category-card--disabled{% endif %}">
+          <div class="cat-icon" style="background:linear-gradient(135deg,#dc2626,#b91c1c)">
+            <i class="fas fa-utensils"></i>
+          </div>
+          <div class="cat-name">Gastronomie</div>
+          <div class="cat-count">{{ sites_count.Gastronomie|default:0 }} sites</div>
+          <div class="cat-arrow"><i class="fas fa-arrow-right"></i></div>
+        </a>
+      </div>
+
+      <div class="col-6 col-md-3">
+        <a href="{% if sites_count.Sports_Aventure %}{% url 'sites:site_par_type' 'Sports_Aventure' %}{% else %}#{% endif %}"
+           class="category-card{% if not sites_count.Sports_Aventure %} category-card--disabled{% endif %}">
+          <div class="cat-icon" style="background:linear-gradient(135deg,#ea580c,#c2410c)">
+            <i class="fas fa-hiking"></i>
+          </div>
+          <div class="cat-name">Sports & Aventure</div>
+          <div class="cat-count">{{ sites_count.Sports_Aventure|default:0 }} sites</div>
+          <div class="cat-arrow"><i class="fas fa-arrow-right"></i></div>
+        </a>
+      </div>
+
+      <div class="col-6 col-md-3">
+        <a href="{% if sites_count.Bien_être_Spa %}{% url 'sites:site_par_type' 'Bien_être_Spa' %}{% else %}#{% endif %}"
+           class="category-card{% if not sites_count.Bien_être_Spa %} category-card--disabled{% endif %}">
+          <div class="cat-icon" style="background:linear-gradient(135deg,#db2777,#be185d)">
+            <i class="fas fa-spa"></i>
+          </div>
+          <div class="cat-name">Bien-être & Spa</div>
+          <div class="cat-count">{{ sites_count.Bien_être_Spa|default:0 }} sites</div>
+          <div class="cat-arrow"><i class="fas fa-arrow-right"></i></div>
+        </a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════ FEATURED SITES -->
+<section class="section-gap bg-section">
+  <div class="container">
+    <div class="section-header d-flex justify-content-between align-items-end flex-wrap gap-3">
+      <div>
+        <div class="section-tag">À découvrir</div>
+        <h2 class="section-title mb-0">Sites à la une</h2>
+      </div>
+      <a href="{% url 'sites:afficher_site' %}" class="btn btn-outline-custom">Voir tous les sites <i class="fas fa-arrow-right ms-2"></i></a>
+    </div>
+    <div class="row g-4 mt-1">
+      <!-- Card 1 -->
+     {% for s in sites %}
+<div class="col-md-6 col-lg-4">
+    <div class="site-card h-100 d-flex flex-column">
+        <div class="site-card-img" style="background:linear-gradient(135deg,#c84b31,#ecb26e)">
+            <img src="{{ s.image.url }}" alt="sites"/>
+        </div>
+
+        <span class="site-type-badge badge-{{ s.type }}">{{ s.type|capfirst  }}</span>
+
+        <div class="site-card-body">
+            <div class="site-card-location">
+                <i class="fas fa-map-pin"></i> {{ s.Adresse }}, Maroc
+            </div>
+
+            <h3 class="site-card-title">{{ s.name }}</h3>
+
+            <p class="site-card-desc">
+                {{ s.description|truncatechars:150 }}
+            </p>
+
+            <div class="site-card-footer">
+                <div class="site-rating">
+                    {% for i in "12345" %}
+                        {% if forloop.counter <= s.average_rating %}
+                            <i class="fas fa-star"></i>
+                        {% else %}
+                            <i class="far fa-star"></i>
+                        {% endif %}
+                    {% endfor %}
+
+                    <span>{{ s.average_rating }}<small>(312 avis)</small></span>
+                </div>
+
+                <a href="{% url 'sites:sites_detail' s.id %}" class="btn btn-card">
+                    Voir <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% empty %}
+<div class="col-12 text-center py-5">
+    <h5 class="text-muted">Il n’y a aucun site pour le moment</h5>
+</div>
+{% endfor %}
+      <!-- Card 2 -->
+   
+      <!-- Card 3 -->
+    
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════ CTA REGISTER -->
+<section class="cta-section">
+  <div class="cta-shapes">
+    <div class="cta-shape cta-shape-1"></div>
+    <div class="cta-shape cta-shape-2"></div>
+  </div>
+  <div class="container position-relative">
+    <div class="row justify-content-center text-center">
+      <div class="col-lg-7">
+        <h2 class="cta-title">Votre prochain voyage commence ici</h2>
+        <p class="cta-sub">Créez un compte gratuit et obtenez des recommandations personnalisées basées sur vos centres d'intérêt.</p>
+        <div class="d-flex justify-content-center gap-3 flex-wrap">
+          <a href="{% url 'userauths:register' %}" class="btn btn-cta-primary">Commencer gratuitement</a>
+          <a href="{% url 'sites:afficher_site' %}" class="btn btn-cta-outline">Explorer les sites</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock  %}

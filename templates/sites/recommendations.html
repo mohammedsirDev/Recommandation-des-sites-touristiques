@@ -1,0 +1,58 @@
+{% extends "partials/site.html" %} 
+{% block content %}
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <div class="container">
+    <h1 class="page-header-title">Sites Touristiques</h1>
+    <p class="page-header-sub">Explorez notre sélection de destinations exceptionnelles</p>
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="container section-gap">
+ 
+
+      <!-- Grid -->
+      <div class="row g-4" id="sitesGrid">
+        <!-- Site card repeat block -->
+         {% for s in sites  %}
+      <div class="col-md-6 col-lg-4">
+        <div class="site-card h-100 d-flex flex-column">
+       <div class="site-card-img" style="background:linear-gradient(135deg,#c84b31,#ecb26e)">
+            <!--   <div class="site-card-img-inner">
+              <i class="fas fa-mosque"></i>
+            </div>-->
+            <img  src="{{s.image.url}}" alt="sites"/>
+          </div> 
+          <span class="site-type-badge badge-{{s.type}}">{{s.type|capfirst }} </span>
+          <div class="site-card-body">
+            <div class="site-card-location"><i class="fas fa-map-pin"></i> {{s.Adresse}}, Maroc</div>
+            <h3 class="site-card-title">{{s.name}}</h3>
+            <p class="site-card-desc">{{s.description|truncatechars:150}}</p>
+            <div class="site-card-footer">
+              <div class="site-rating">
+               {% for i in "12345" %}
+        {% if forloop.counter <= s.average_rating %}
+                  <i class="fas fa-star"></i>   {# full star #}
+              {% else %}
+                  <i class="far fa-star"></i>   {# empty star #}
+                        {% endif %}
+           {% endfor %}
+                
+                <span>{{ s.average_rating }}<small>(312 avis)</small></span>
+              </div>
+              <a href="{%url "sites:sites_detail" s.id %}" class="btn btn-card">Voir <i class="fas fa-arrow-right"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {% endfor %}
+
+    
+      </div><!-- /sitesGrid -->
+
+     
+
+{%endblock%}

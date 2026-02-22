@@ -1,0 +1,68 @@
+{% extends "partials/site.html" %} 
+{% block content %}
+<div class="page-header">
+  <div class="container">
+    <h1 class="page-header-title">Sites Touristiques</h1>
+    <p class="page-header-sub">Explorez notre sélection de destinations exceptionnelles</p>
+  </div>
+</div>
+<!-- MAIN CONTENT -->
+<div class="container section-gap">
+  <div class="row g-4">
+
+   
+    
+
+    <!-- RESULTS -->
+    <div class="col-lg-12">
+      <!-- Toolbar -->
+      <div class="results-toolbar">
+        <div class="results-count"><strong>{{sites_count}}</strong> sites trouvés</div>
+        <div class="results-sort d-flex align-items-center gap-2">
+        
+       
+        </div>
+      </div>
+
+      <!-- Grid -->
+      <div class="row g-4" id="sitesGrid">
+        <!-- Site card repeat block -->
+         {% for s in sites  %}
+        <div class="col-md-6 col-xl-4">
+          <div class="site-card h-100">
+            <div class="site-card-img" style="">
+              <img src="{{s.image.url}}" alt="image None" />
+            </div>
+            <span class="site-type-badge badge-history">{{s.type}}</span>
+            <div class="site-card-body">
+              <div class="site-card-location"><i class="fas fa-map-pin"></i> {{s.name}}</div>
+              <h3 class="site-card-title">{{s.Adresse}}</h3>
+              <p class="site-card-desc">{{s.description|truncatechars:150}}</p>
+              <div class="site-card-footer">
+                <div class="site-rating">
+        {% for i in "12345" %}
+        {% if forloop.counter <= s.average_rating %}
+                  <i class="fas fa-star"></i>   {# full star #}
+              {% else %}
+                  <i class="far fa-star"></i>   {# empty star #}
+                        {% endif %}
+           {% endfor %}                  <span>{{ s.average_rating }}</span>
+                </div>
+                <a href="{%url "sites:sites_detail" s.id %}" class="btn btn-card">Voir</a>
+              </div>
+            </div>
+          </div>
+        </div>
+{% endfor %}
+
+      </div><!-- /sitesGrid -->
+
+      <!-- Pagination -->
+      <nav class="mt-5">
+
+    </div>
+  </div>
+</div>
+
+
+{%endblock%}
